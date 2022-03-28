@@ -100,6 +100,43 @@ install_acme() {
     curl https://get.acme.sh | sh
 }
 
+auto()
+{
+  echo -e "  Nhập tên web ( Mặc định là 2lands.me ): "
+  read -p "  Web tên:" api_host
+
+  [ -z "${api_host}" ]
+
+  echo "--------------------------------"
+  echo "  Bạn đã  ${api_host}"
+  echo "--------------------------------"
+
+ read -p "  API KEY của web (api_key):" apikey
+  [ -z "${apikey}" ]
+  echo "-------------------------------"
+  echo "API KEY Web của bạn:" apikey
+  echo "-------------------------------"
+
+
+  read -p "  ID nút (Node_ID):" node_id
+  [ -z "${node_id}" ] && node_id=0
+  echo "-------------------------------"
+  echo -e "  Node_ID: ${node_id}"
+  echo "-------------------------------"
+
+  # giới hạn thiết bị
+ read -p "  Giới hạn thiết bị :" DeviceLimit
+  [ -z "${DeviceLimit}" ] && DeviceLimit="3"
+  echo "-------------------------------"
+  echo "  Thiết bị tối đa là: ${DeviceLimit}"
+  echo "-------------------------------"
+}
+sed -i "s|NodeID:.*|NodeID: ${node_id}|" ./config.yml
+sed -i "s|ApiHost:.*|ApiHost: \"${api_host}\"|" ./config.yml
+sed -i "s|DeviceLimit:.*|DeviceLimit: ${DeviceLimit}|" ./config.yml
+sed -i "s|ApiKey:.*|ApiKey: ${apikey}|" ./config.yml
+
+
 install_XrayR() {
     if [[ -e /usr/local/XrayR/ ]]; then
         rm /usr/local/XrayR/ -rf
@@ -199,3 +236,4 @@ echo -e "${green}开始安装${plain}"
 install_base
 install_acme
 install_XrayR $1
+auto
